@@ -33,7 +33,7 @@ open class LBXScanViewController: UIViewController, UIImagePickerControllerDeleg
     //是否需要识别后的当前图像
     public var isNeedCodeImage = false
     //相机启动提示文字
-    public var readyString:String! = "loading"
+    public var readyString = "loading"
 
     override open func viewDidLoad() {
         super.viewDidLoad()
@@ -97,15 +97,14 @@ open class LBXScanViewController: UIViewController, UIImagePickerControllerDeleg
         }
         qRScanView?.deviceStartReadying(readyStr: readyString)
     }
-   
-    
+
     /**
      处理扫码结果，如果是继承本控制器的，可以重写该方法,作出相应地处理，或者设置delegate作出相应处理
      */
     open func handleCodeResult(arrayResult:[LBXScanResult]) {
         if let delegate = scanResultDelegate  {
             self.navigationController?.popViewController(animated: true)
-            let result:LBXScanResult = arrayResult[0]
+            let result = arrayResult[0]
             delegate.scanFinished(scanResult: result, error: nil)
         } else{
             let result:LBXScanResult = arrayResult[0]

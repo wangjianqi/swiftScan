@@ -38,7 +38,7 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
     var previewLayer:AVCaptureVideoPreviewLayer?
     var stillImageOutput:AVCaptureStillImageOutput?
     //存储返回结果
-    var arrayResult:[LBXScanResult] = [];
+    var arrayResult:[LBXScanResult] = []
     //扫码结果返回block
     var successBlock:([LBXScanResult]) -> Void
     //是否需要拍照
@@ -55,7 +55,7 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
      - parameter success:      返回识别信息
      - returns:
      */
-    init( videoPreView:UIView,objType:[AVMetadataObject.ObjectType] = [(AVMetadataObject.ObjectType.qr as NSString) as AVMetadataObject.ObjectType],isCaptureImg:Bool,cropRect:CGRect=CGRect.zero,success:@escaping (([LBXScanResult]) -> Void)){
+    init(videoPreView: UIView,objType: [AVMetadataObject.ObjectType] = [(AVMetadataObject.ObjectType.qr as NSString) as AVMetadataObject.ObjectType],isCaptureImg:Bool,cropRect:CGRect=CGRect.zero,success:@escaping (([LBXScanResult]) -> Void)){
         do {
             input = try AVCaptureDeviceInput(device: device!)
         } catch let error as NSError {
@@ -102,7 +102,7 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
         previewLayer?.frame = frame
         videoPreView.layer .insertSublayer(previewLayer!, at: 0)
         
-        if (device!.isFocusPointOfInterestSupported && device!.isFocusModeSupported(AVCaptureDevice.FocusMode.continuousAutoFocus) ) {
+        if (device!.isFocusPointOfInterestSupported && device!.isFocusModeSupported(AVCaptureDevice.FocusMode.continuousAutoFocus)) {
             do {
                 try input?.device.lockForConfiguration()
                 input?.device.focusMode = AVCaptureDevice.FocusMode.continuousAutoFocus
@@ -132,10 +132,8 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
     }
     
     open func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [Any]!, from connection: AVCaptureConnection!) {
-        if !isNeedScanResult {
-            //上一帧处理中
-            return
-        }
+        //上一帧处理中
+        if !isNeedScanResult { return }
         isNeedScanResult = false
         arrayResult.removeAll()
         //识别扫码类型
@@ -210,7 +208,7 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
     }
     
     open func isGetFlash()->Bool {
-        if (device != nil &&  device!.hasFlash && device!.hasTorch) { return true }
+        if (device != nil && device!.hasFlash && device!.hasTorch) { return true }
         return false
     }
     
@@ -304,8 +302,7 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
     
     
     //MARK: -- - 生成二维码，背景色及二维码颜色设置
-    static public func createCode( codeType:String, codeString:String, size:CGSize,qrColor:UIColor,bkColor:UIColor )->UIImage?
-    {
+    static public func createCode( codeType:String, codeString:String, size:CGSize,qrColor:UIColor,bkColor:UIColor ) -> UIImage? {
         let stringData = codeString.data(using: String.Encoding.utf8)
         //系统自带能生成的码
         //        CIAztecCodeGenerator
@@ -351,23 +348,20 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
     
     
     //MARK:根据扫描结果，获取图像中得二维码区域图像（如果相机拍摄角度故意很倾斜，获取的图像效果很差）
-    static func getConcreteCodeImage(srcCodeImage:UIImage,codeResult:LBXScanResult)->UIImage? {
+    static func getConcreteCodeImage(srcCodeImage:UIImage,codeResult:LBXScanResult)-> UIImage? {
         let rect:CGRect = getConcreteCodeRectFromImage(srcCodeImage: srcCodeImage, codeResult: codeResult)
         if rect.isEmpty { return nil }
         guard let img = imageByCroppingWithStyle(srcImg: srcCodeImage, rect: rect) else { return nil }
         let imgRotation = imageRotation(image: img, orientation: UIImage.Orientation.right)
         return imgRotation
     }
+    
     //根据二维码的区域截取二维码区域图像
-    static public func getConcreteCodeImage(srcCodeImage:UIImage,rect:CGRect)->UIImage?
-    {
+    static public func getConcreteCodeImage(srcCodeImage:UIImage,rect:CGRect)-> UIImage? {
         if rect.isEmpty { return nil }
-        let img = imageByCroppingWithStyle(srcImg: srcCodeImage, rect: rect)
-        if img != nil {
-            let imgRotation = imageRotation(image: img!, orientation: UIImage.Orientation.right)
-            return imgRotation
-        }
-        return nil
+        guard let img = imageByCroppingWithStyle(srcImg: srcCodeImage, rect: rect) else { return nil }
+        let imgRotation = imageRotation(image: img, orientation: UIImage.Orientation.right)
+        return imgRotation
     }
     
     //获取二维码的图像区域
