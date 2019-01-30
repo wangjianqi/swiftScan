@@ -36,14 +36,14 @@ class LBXScanNetAnimation: UIImageView {
         frame.size.height = hImg;
         self.frame = frame
         self.alpha = 0.0
-        UIView.animate(withDuration: 1.2, animations: { () -> Void in
+        UIView.animate(withDuration: 1.2, animations: {
             self.alpha = 1.0
             var frame = self.animationRect;
             let hImg = self.image!.size.height * self.animationRect.size.width / self.image!.size.width
             frame.origin.y += (frame.size.height -  hImg);
             frame.size.height = hImg
             self.frame = frame
-            }, completion:{ (value: Bool) -> Void in
+            }, completion:{ _ in
                 self.perform(#selector(LBXScanNetAnimation.stepAnimation), with: nil, afterDelay: 0.3)
         })
         

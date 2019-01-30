@@ -16,7 +16,7 @@ import AssetsLibrary
 class LBXPermissions: NSObject {
 
     //MARK: ----获取相册权限
-    static func authorizePhotoWith(comletion:@escaping (Bool)->Void ) {
+    static func authorizePhotoWith(comletion:@escaping (Bool) -> Void) {
         let granted = PHPhotoLibrary.authorizationStatus()
         switch granted {
         case PHAuthorizationStatus.authorized:
@@ -33,7 +33,7 @@ class LBXPermissions: NSObject {
     }
     
     //MARK: ---相机权限
-    static func authorizeCameraWith(comletion:@escaping (Bool)->Void){
+    static func authorizeCameraWith(comletion:@escaping (Bool) -> Void){
         let granted = AVCaptureDevice.authorizationStatus(for: AVMediaType.video);
         switch granted {
         case .authorized:

@@ -48,7 +48,7 @@ open class LBXScanView: UIView
         default:
             break
         }
-        var frameTmp = frame;
+        var frameTmp = frame
         frameTmp.origin = CGPoint.zero
         super.init(frame: frameTmp)
         backgroundColor = UIColor.clear
@@ -84,11 +84,9 @@ open class LBXScanView: UIView
         let cropRect:CGRect = getScanRectForAnimation()
         switch viewStyle.anmiationStyle {
         case LBXScanViewAnimationStyle.LineMove:
-            scanLineAnimation!.startAnimatingWithRect(animationRect: cropRect, parentView: self, image:viewStyle.animationImage )
-            break
+            scanLineAnimation!.startAnimatingWithRect(animationRect: cropRect, parentView: self, image:viewStyle.animationImage)
         case LBXScanViewAnimationStyle.NetGrid:
-            scanNetAnimation!.startAnimatingWithRect(animationRect: cropRect, parentView: self, image:viewStyle.animationImage )
-            break
+            scanNetAnimation!.startAnimatingWithRect(animationRect: cropRect, parentView: self, image:viewStyle.animationImage)
         case LBXScanViewAnimationStyle.LineStill:
             let stillRect = CGRect(x: cropRect.origin.x+20,
                                    y: cropRect.origin.y + cropRect.size.height/2,
@@ -97,7 +95,6 @@ open class LBXScanView: UIView
             self.scanLineStill?.frame = stillRect
             self.addSubview(scanLineStill!)
             self.scanLineStill?.isHidden = false
-            break
         default:
             break
         }
@@ -111,13 +108,10 @@ open class LBXScanView: UIView
         switch viewStyle.anmiationStyle {
         case LBXScanViewAnimationStyle.LineMove:
             scanLineAnimation?.stopStepAnimating()
-            break
         case LBXScanViewAnimationStyle.NetGrid:
             scanNetAnimation?.stopStepAnimating()
-            break
         case LBXScanViewAnimationStyle.LineStill:
-             self.scanLineStill?.isHidden = true
-            break
+            self.scanLineStill?.isHidden = true
         default:
             break
         }
@@ -182,7 +176,6 @@ open class LBXScanView: UIView
         
         //4个角的 线的宽度
         let linewidthAngle = viewStyle.photoframeLineW;// 经验参数：6和4
-        
         //画扫码矩形以及周边半透明黑色坐标参数
         var diffAngle = linewidthAngle/3;
         diffAngle = linewidthAngle / 2; //框外面4个角，与框有缝隙
@@ -252,17 +245,16 @@ open class LBXScanView: UIView
             h = CGFloat(hInt)
             sizeRetangle = CGSize(width: w, height: h)
         }
-        
         //扫码区域Y轴最小坐标
         let YMinRetangle = self.frame.size.height / 2.0 - sizeRetangle.height/2.0 - viewStyle.centerUpOffset
         //扫码区域坐标
         let cropRect =  CGRect(x: XRetangleLeft, y: YMinRetangle, width: sizeRetangle.width, height: sizeRetangle.height)
-        return cropRect;
+        return cropRect
     }
 
     //根据矩形区域，获取识别区域
     static func getScanRectWithPreView(preView:UIView, style:LBXScanViewStyle) -> CGRect {
-        let XRetangleLeft = style.xScanRetangleOffset;
+        let XRetangleLeft = style.xScanRetangleOffset
         var sizeRetangle = CGSize(width: preView.frame.size.width - XRetangleLeft*2, height: preView.frame.size.width - XRetangleLeft*2)
         if style.whRatio != 1 {
             let w = sizeRetangle.width
@@ -271,7 +263,6 @@ open class LBXScanView: UIView
             h = CGFloat(hInt)
             sizeRetangle = CGSize(width: w, height: h)
         }
-        
         //扫码区域Y轴最小坐标
         let YMinRetangle = preView.frame.size.height / 2.0 - sizeRetangle.height/2.0 - style.centerUpOffset
         //扫码区域坐标

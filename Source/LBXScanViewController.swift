@@ -75,14 +75,12 @@ open class LBXScanViewController: UIViewController, UIImagePickerControllerDeleg
             if arrayCodeType == nil {
                 arrayCodeType = [AVMetadataObject.ObjectType.qr as NSString ,AVMetadataObject.ObjectType.ean13 as NSString ,AVMetadataObject.ObjectType.code128 as NSString] as [AVMetadataObject.ObjectType]
             }
-            
             scanObj = LBXScanWrapper(videoPreView: self.view,objType:arrayCodeType!, isCaptureImg: isNeedCodeImage,cropRect:cropRect, success: { [weak self] (arrayResult) -> Void in
                 guard let `self` = self else { return }
                 self.qRScanView?.stopScanAnimation()
                 self.handleCodeResult(arrayResult: arrayResult)
              })
         }
-        
         //结束相机等待提示
         qRScanView?.deviceStopReadying()
         //开始扫描动画
@@ -137,8 +135,7 @@ open class LBXScanViewController: UIViewController, UIImagePickerControllerDeleg
         }
         if (image != nil) {
             let arrayResult = LBXScanWrapper.recognizeQRImage(image: image!)
-            if arrayResult.count > 0
-            {
+            if arrayResult.count > 0 {
                 handleCodeResult(arrayResult: arrayResult)
                 return
             }
