@@ -18,13 +18,10 @@ class LBXScanLineAnimation: UIImageView {
         self.image = image
         self.animationRect = animationRect
         parentView.addSubview(self)
-        
         self.isHidden = false;
-        
         isAnimationing = true;
         
-        if image != nil
-        {
+        if image != nil {
             stepAnimation()
         }
         
@@ -32,33 +29,22 @@ class LBXScanLineAnimation: UIImageView {
     
     @objc func stepAnimation()
     {
-        if (!isAnimationing) {
-            return;
-        }
-        
-        var frame:CGRect = animationRect;
-        
-        let hImg = self.image!.size.height * animationRect.size.width / self.image!.size.width;
-        
+        if (!isAnimationing) { return }
+        var frame:CGRect = animationRect
+        let hImg = self.image!.size.height * animationRect.size.width / self.image!.size.width
         frame.origin.y -= hImg;
         frame.size.height = hImg;
         self.frame = frame;
         self.alpha = 0.0;
         
         UIView.animate(withDuration: 1.4, animations: { () -> Void in
-            
-            self.alpha = 1.0;
-            
+            self.alpha = 1.0
             var frame = self.animationRect;
             let hImg = self.image!.size.height * self.animationRect.size.width / self.image!.size.width;
-            
             frame.origin.y += (frame.size.height -  hImg);
             frame.size.height = hImg;
-            
-            self.frame = frame;
-            
+            self.frame = frame
             }, completion:{ (value: Bool) -> Void in
-                                
                 self.perform(#selector(LBXScanLineAnimation.stepAnimation), with: nil, afterDelay: 0.3)
         })
         
@@ -70,14 +56,11 @@ class LBXScanLineAnimation: UIImageView {
         isAnimationing = false;
     }
     
-    static public func instance()->LBXScanLineAnimation
-    {
+    static public func instance()->LBXScanLineAnimation {
         return LBXScanLineAnimation()
     }
     
-    deinit
-    {
-//        print("LBXScanLineAnimation deinit")
+    deinit {
         stopStepAnimating()
     }
 

@@ -46,10 +46,6 @@ open class LBXScanViewController: UIViewController, UIImagePickerControllerDeleg
 
     override open func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-        
-              // [self.view addSubview:_qRScanView];
         self.view.backgroundColor = UIColor.black
         self.edgesForExtendedLayout = UIRectEdge(rawValue: 0)
     }
@@ -208,18 +204,10 @@ open class LBXScanViewController: UIViewController, UIImagePickerControllerDeleg
         
         let alertController = UIAlertController(title: nil, message:message, preferredStyle: UIAlertController.Style.alert)
         let alertAction = UIAlertAction(title: NSLocalizedString("OK", comment: "OK"), style: UIAlertAction.Style.default) { (alertAction) in
-                
-//                if let strongSelf = self
-//                {
-//                    strongSelf.startScan()
-//                }
+            
             }
-        
-            alertController.addAction(alertAction)
-            present(alertController, animated: true, completion: nil)
+        alertController.addAction(alertAction)
+        present(alertController, animated: true, completion: nil)
     }
-    deinit
-    {
-//        print("LBXScanViewController deinit")
-    }
+
 }

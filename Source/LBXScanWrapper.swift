@@ -395,8 +395,7 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
         
         if LBXScanWrapper.isSysIos8Later()
         {
-            //if #available(iOS 8.0, *)
-            
+        
             let detector:CIDetector = CIDetector(ofType: CIDetectorTypeQRCode, context: nil, options: [CIDetectorAccuracy:CIDetectorAccuracyHigh])!
             
             let img = CIImage(cgImage: (image.cgImage)!)
@@ -682,12 +681,6 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
         //绘制图片
         context.draw(image.cgImage!, in: CGRect(x: 0, y: 0, width: rect.size.width, height: rect.size.height))
         let newPic = UIGraphicsGetImageFromCurrentImageContext();
-        
         return newPic!;
-    }
-    
-    deinit
-    {
-        //        print("LBXScanWrapper deinit")
     }
 }

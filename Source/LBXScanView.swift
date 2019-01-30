@@ -97,9 +97,6 @@ open class LBXScanView: UIView
         {
             scanNetAnimation!.stopStepAnimating()
         }
-        
-        
-//        print("LBXScanView deinit")
     }
     
     
@@ -108,29 +105,18 @@ open class LBXScanView: UIView
     */
     func startScanAnimation()
     {
-        if isAnimationing
-        {
-            return
-        }
-        
+        if isAnimationing { return }
         isAnimationing = true
-        
         let cropRect:CGRect = getScanRectForAnimation()
-        
         switch viewStyle.anmiationStyle
         {
         case LBXScanViewAnimationStyle.LineMove:
-            
-//            print(NSStringFromCGRect(cropRect))
-            
             scanLineAnimation!.startAnimatingWithRect(animationRect: cropRect, parentView: self, image:viewStyle.animationImage )
             break
         case LBXScanViewAnimationStyle.NetGrid:
-            
             scanNetAnimation!.startAnimatingWithRect(animationRect: cropRect, parentView: self, image:viewStyle.animationImage )
             break
         case LBXScanViewAnimationStyle.LineStill:
-            
             let stillRect = CGRect(x: cropRect.origin.x+20,
                                    y: cropRect.origin.y + cropRect.size.height/2,
                                    width: cropRect.size.width-40,
@@ -139,9 +125,7 @@ open class LBXScanView: UIView
             
             self.addSubview(scanLineStill!)
             self.scanLineStill?.isHidden = false
-            
             break
-            
         default: break
             
         }
@@ -153,22 +137,17 @@ open class LBXScanView: UIView
     func stopScanAnimation()
     {
         isAnimationing = false
-        
         switch viewStyle.anmiationStyle
         {
         case LBXScanViewAnimationStyle.LineMove:
-            
             scanLineAnimation?.stopStepAnimating()
             break
         case LBXScanViewAnimationStyle.NetGrid:
-            
             scanNetAnimation?.stopStepAnimating()
             break
         case LBXScanViewAnimationStyle.LineStill:
              self.scanLineStill?.isHidden = true
-            
             break
-            
         default: break
             
         }
@@ -180,7 +159,6 @@ open class LBXScanView: UIView
     // An empty implementation adversely affects performance during animation.
     override open func draw(_ rect: CGRect)
     {
-        // Drawing code
         drawScanRect()
     }
     
@@ -204,13 +182,7 @@ open class LBXScanView: UIView
         let YMinRetangle = self.frame.size.height / 2.0 - sizeRetangle.height/2.0 - viewStyle.centerUpOffset
         let YMaxRetangle = YMinRetangle + sizeRetangle.height
         let XRetangleRight = self.frame.size.width - XRetangleLeft
-        
-        
-//        print("frame:%@",NSStringFromCGRect(self.frame))
-        
         let context = UIGraphicsGetCurrentContext()!
-        
-        
         //非扫码区域半透明
             //设置非识别区域颜色
         context.setFillColor(viewStyle.color_NotRecoginitonArea.cgColor)
@@ -316,7 +288,7 @@ open class LBXScanView: UIView
         context.move(to: CGPoint(x: rightX, y: topY-linewidthAngle/2))
         context.addLine(to: CGPoint(x: rightX, y: topY + hAngle))
 
-//        右下角水平线
+        //右下角水平线
         context.move(to: CGPoint(x: rightX+linewidthAngle/2, y: bottomY))
         context.addLine(to: CGPoint(x: rightX - wAngle, y: bottomY))
         
@@ -362,10 +334,8 @@ open class LBXScanView: UIView
         {
             let w = sizeRetangle.width
             var h = w / style.whRatio
-            
             let hInt:Int = Int(h)
             h = CGFloat(hInt)
-            
             sizeRetangle = CGSize(width: w, height: h)
         }
         
@@ -406,18 +376,12 @@ open class LBXScanView: UIView
     func getRetangeSize()->CGSize
     {
         let XRetangleLeft = viewStyle.xScanRetangleOffset
-        
         var sizeRetangle = CGSize(width: self.frame.size.width - XRetangleLeft*2, height: self.frame.size.width - XRetangleLeft*2)
-        
         let w = sizeRetangle.width;
-        var h = w / viewStyle.whRatio;
-        
-        
+        var h = w / viewStyle.whRatio
         let hInt:Int = Int(h)
         h = CGFloat(hInt)
-        
-        sizeRetangle = CGSize(width: w, height:  h)
-        
+        sizeRetangle = CGSize(width: w, height: h)
         return sizeRetangle
     }
     
@@ -434,15 +398,10 @@ open class LBXScanView: UIView
         if (activityView == nil)
         {
             self.activityView = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
-            
             activityView?.center = CGPoint(x: XRetangleLeft +  sizeRetangle.width/2 - 50, y: YMinRetangle + sizeRetangle.height/2)
             activityView?.style = UIActivityIndicatorView.Style.whiteLarge
-            
             addSubview(activityView!)
-            
-            
-            let labelReadyRect = CGRect(x: activityView!.frame.origin.x + activityView!.frame.size.width + 10, y: activityView!.frame.origin.y, width: 100, height: 30);
-            //print("%@",NSStringFromCGRect(labelReadyRect))
+            let labelReadyRect = CGRect(x: activityView!.frame.origin.x + activityView!.frame.size.width + 10, y: activityView!.frame.origin.y, width: 100, height: 30)
             self.labelReadying = UILabel(frame: labelReadyRect)
             labelReadying?.text = readyStr
             labelReadying?.backgroundColor = UIColor.clear
@@ -463,10 +422,8 @@ open class LBXScanView: UIView
             activityView?.stopAnimating()
             activityView?.removeFromSuperview()
             labelReadying?.removeFromSuperview()
-            
             activityView = nil
             labelReadying = nil
-            
         }
     }
 
