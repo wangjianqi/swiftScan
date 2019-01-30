@@ -10,19 +10,16 @@ import UIKit
 import AVFoundation
 
 public struct  LBXScanResult {
-    
     //码内容
-    public var strScanned:String? = ""
+    public var strScanned:String?
     //扫描图像
     public var imgScanned:UIImage?
     //码的类型
-    public var strBarCodeType:String? = ""
-    
+    public var strBarCodeType:String?
     //码在图像中的位置
     public var arrayCorner:[AnyObject]?
     
-    public init(str:String?,img:UIImage?,barCodeType:String?,corner:[AnyObject]?)
-    {
+    public init(str: String? = "",img: UIImage?,barCodeType: String? = "",corner: [AnyObject]?) {
         self.strScanned = str
         self.imgScanned = img
         self.strBarCodeType = barCodeType
@@ -94,9 +91,7 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
         
         let outputSettings:Dictionary = [AVVideoCodecJPEG:AVVideoCodecKey]
         stillImageOutput?.outputSettings = outputSettings
-        
         session.sessionPreset = AVCaptureSession.Preset.high
-        
         //参数设置
         output.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
         output.metadataObjectTypes = objType
@@ -111,7 +106,7 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
         
         previewLayer = AVCaptureVideoPreviewLayer(session: session)
         previewLayer?.videoGravity = AVLayerVideoGravity.resizeAspectFill
-        
+    
         var frame:CGRect = videoPreView.frame
         frame.origin = CGPoint.zero
         previewLayer?.frame = frame
@@ -126,7 +121,6 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
                 input?.device.unlockForConfiguration()
             } catch let error as NSError {
                 print("device.lockForConfiguration(): \(error)")
-                
             }
         }
     }
@@ -135,18 +129,15 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
         captureOutput(output, didOutputMetadataObjects: metadataObjects, from: connection)
     }
     
-    func start()
-    {
-        if !session.isRunning
-        {
+    func start() {
+        if !session.isRunning {
             isNeedScanResult = true
             session.startRunning()
         }
     }
-    func stop()
-    {
-        if session.isRunning
-        {
+    
+    func stop() {
+        if session.isRunning {
             isNeedScanResult = false
             session.stopRunning()
         }
@@ -154,8 +145,7 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
     
     open func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [Any]!, from connection: AVCaptureConnection!) {
         
-        if !isNeedScanResult
-        {
+        if !isNeedScanResult {
             //上一帧处理中
             return
         }
@@ -178,24 +168,16 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
             }
         }
         
-        if arrayResult.count > 0
-        {
-            if isNeedCaptureImage
-            {
+        if arrayResult.count > 0 {
+            if isNeedCaptureImage {
                 captureImage()
-            }
-            else
-            {
+            } else {
                 stop()
                 successBlock(arrayResult)
             }
-            
-        }
-        else
-        {
+        } else {
             isNeedScanResult = true
         }
-        
     }
     
     //MARK: ----拍照
@@ -204,12 +186,10 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
         let stillImageConnection:AVCaptureConnection? = connectionWithMediaType(mediaType: AVMediaType.video as AVMediaType, connections: (stillImageOutput?.connections)! as [AnyObject])
         stillImageOutput?.captureStillImageAsynchronously(from: stillImageConnection!, completionHandler: { (imageDataSampleBuffer, error) -> Void in
             self.stop()
-            if imageDataSampleBuffer != nil
-            {
+            if imageDataSampleBuffer != nil {
                 let imageData: Data = AVCaptureStillImageOutput.jpegStillImageNSDataRepresentation(imageDataSampleBuffer!)!
                 let scanImg:UIImage? = UIImage(data: imageData)
-                for idx in 0...self.arrayResult.count-1
-                {
+                for idx in 0...self.arrayResult.count-1 {
                     self.arrayResult[idx].imgScanned = scanImg
                 }
             }
@@ -217,19 +197,13 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
         })
     }
     
-    open func connectionWithMediaType(mediaType:AVMediaType, connections:[AnyObject]) -> AVCaptureConnection?
-    {
-        for connection:AnyObject in connections
-        {
+    open func connectionWithMediaType(mediaType:AVMediaType, connections:[AnyObject]) -> AVCaptureConnection? {
+        for connection:AnyObject in connections {
             let connectionTmp:AVCaptureConnection = connection as! AVCaptureConnection
-            
-            for port:Any in connectionTmp.inputPorts
-            {
-                if (port as AnyObject).isKind(of: AVCaptureInput.Port.self)
-                {
+            for port:Any in connectionTmp.inputPorts {
+                if (port as AnyObject).isKind(of: AVCaptureInput.Port.self) {
                     let portTmp:AVCaptureInput.Port = port as! AVCaptureInput.Port
-                    if portTmp.mediaType == mediaType
-                    {
+                    if portTmp.mediaType == mediaType {
                         return connectionTmp
                     }
                 }
@@ -240,8 +214,7 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
     
     
     //MARK:切换识别区域
-    open func changeScanRect(cropRect:CGRect)
-    {
+    open func changeScanRect(cropRect:CGRect) {
         //待测试，不知道是否有效
         stop()
         output.rectOfInterest = cropRect
@@ -249,16 +222,13 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
     }
     
     //MARK: 切换识别码的类型
-    open func changeScanType(objType:[AVMetadataObject.ObjectType])
-    {
+    open func changeScanType(objType:[AVMetadataObject.ObjectType]) {
         //待测试中途修改是否有效
         output.metadataObjectTypes = objType
     }
     
-    open func isGetFlash()->Bool
-    {
-        if (device != nil &&  device!.hasFlash && device!.hasTorch)
-        {
+    open func isGetFlash()->Bool {
+        if (device != nil &&  device!.hasFlash && device!.hasTorch) {
             return true
         }
         return false
@@ -268,21 +238,15 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
      打开或关闭闪关灯
      - parameter torch: true：打开闪关灯 false:关闭闪光灯
      */
-    open func setTorch(torch:Bool)
-    {
-        if isGetFlash()
-        {
-            do
-            {
+    open func setTorch(torch:Bool) {
+        if isGetFlash() {
+            do {
                 try input?.device.lockForConfiguration()
-                
                 input?.device.torchMode = torch ? AVCaptureDevice.TorchMode.on : AVCaptureDevice.TorchMode.off
-                
                 input?.device.unlockForConfiguration()
             }
             catch let error as NSError {
                 print("device.lockForConfiguration(): \(error)")
-                
             }
         }
         
@@ -292,30 +256,19 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
     /**
      ------闪光灯打开或关闭
      */
-    open func changeTorch()
-    {
-        if isGetFlash()
-        {
-            do
-            {
+    open func changeTorch() {
+        if isGetFlash() {
+            do {
                 try input?.device.lockForConfiguration()
-                
                 var torch = false
-                
-                if input?.device.torchMode == AVCaptureDevice.TorchMode.on
-                {
+                if input?.device.torchMode == AVCaptureDevice.TorchMode.on {
                     torch = false
-                }
-                else if input?.device.torchMode == AVCaptureDevice.TorchMode.off
-                {
+                } else if input?.device.torchMode == AVCaptureDevice.TorchMode.off {
                     torch = true
                 }
-                
                 input?.device.torchMode = torch ? AVCaptureDevice.TorchMode.on : AVCaptureDevice.TorchMode.off
-                
                 input?.device.unlockForConfiguration()
-            }
-            catch let error as NSError {
+            } catch let error as NSError {
                 print("device.lockForConfiguration(): \(error)")
                 
             }
@@ -337,8 +290,6 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
              AVMetadataObject.ObjectType.pdf417,
              AVMetadataObject.ObjectType.aztec
         ]
-        //if #available(iOS 8.0, *)
-        
         types.append(AVMetadataObject.ObjectType.interleaved2of5)
         types.append(AVMetadataObject.ObjectType.itf14)
         types.append(AVMetadataObject.ObjectType.dataMatrix)
@@ -346,10 +297,9 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
     }
     
     
-    static func isSysIos8Later()->Bool
-    {
+    static func isSysIos8Later()->Bool {
         if #available(iOS 8, *) {
-            return true;
+            return true
         }
         return false
     }
@@ -361,38 +311,22 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
      
      - returns: 返回识别结果
      */
-    static public func recognizeQRImage(image:UIImage) ->[LBXScanResult]
-    {
-        var returnResult:[LBXScanResult]=[]
-        
-        if LBXScanWrapper.isSysIos8Later()
-        {
-        
+    static public func recognizeQRImage(image:UIImage) ->[LBXScanResult] {
+        var returnResult:[LBXScanResult] = []
+        if LBXScanWrapper.isSysIos8Later() {
             let detector:CIDetector = CIDetector(ofType: CIDetectorTypeQRCode, context: nil, options: [CIDetectorAccuracy:CIDetectorAccuracyHigh])!
-            
             let img = CIImage(cgImage: (image.cgImage)!)
-            
             let features:[CIFeature]? = detector.features(in: img, options: [CIDetectorAccuracy:CIDetectorAccuracyHigh])
-            
-            if( features != nil && (features?.count)! > 0)
-            {
+            if( features != nil && (features?.count)! > 0) {
                 let feature = features![0]
-                
-                if feature.isKind(of: CIQRCodeFeature.self)
-                {
+                if feature.isKind(of: CIQRCodeFeature.self) {
                     let featureTmp:CIQRCodeFeature = feature as! CIQRCodeFeature
-                    
                     let scanResult = featureTmp.messageString
-                    
-                    
                     let result = LBXScanResult(str: scanResult, img: image, barCodeType: AVMetadataObject.ObjectType.qr.rawValue,corner: nil)
-                    
                     returnResult.append(result)
                 }
             }
-            
         }
-        
         return returnResult
     }
     
@@ -450,16 +384,9 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
     static func getConcreteCodeImage(srcCodeImage:UIImage,codeResult:LBXScanResult)->UIImage?
     {
         let rect:CGRect = getConcreteCodeRectFromImage(srcCodeImage: srcCodeImage, codeResult: codeResult)
-        
-        if rect.isEmpty
-        {
-            return nil
-        }
-        
+        if rect.isEmpty { return nil }
         let img = imageByCroppingWithStyle(srcImg: srcCodeImage, rect: rect)
-        
-        if img != nil
-        {
+        if img != nil {
             let imgRotation = imageRotation(image: img!, orientation: UIImage.Orientation.right)
             return imgRotation
         }
@@ -468,15 +395,9 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
     //根据二维码的区域截取二维码区域图像
     static public func getConcreteCodeImage(srcCodeImage:UIImage,rect:CGRect)->UIImage?
     {
-        if rect.isEmpty
-        {
-            return nil
-        }
-        
+        if rect.isEmpty { return nil }
         let img = imageByCroppingWithStyle(srcImg: srcCodeImage, rect: rect)
-        
-        if img != nil
-        {
+        if img != nil {
             let imgRotation = imageRotation(image: img!, orientation: UIImage.Orientation.right)
             return imgRotation
         }
@@ -486,13 +407,9 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
     //获取二维码的图像区域
     static public func getConcreteCodeRectFromImage(srcCodeImage:UIImage,codeResult:LBXScanResult)->CGRect
     {
-        if (codeResult.arrayCorner == nil || (codeResult.arrayCorner?.count)! < 4  )
-        {
-            return CGRect.zero
-        }
+        if (codeResult.arrayCorner == nil || (codeResult.arrayCorner?.count)! < 4  ) { return CGRect.zero }
         
         let corner:[[String:Float]] = codeResult.arrayCorner  as! [[String:Float]]
-        
         let dicTopLeft     = corner[0]
         let dicTopRight    = corner[1]
         let dicBottomRight = corner[2]
@@ -535,9 +452,7 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
     @param logoSize  logo图像尺寸
     @return 加Logo的图像
     */
-    static public func addImageLogo(srcImg:UIImage,logoImg:UIImage,logoSize:CGSize )->UIImage
-
-    {
+    static public func addImageLogo(srcImg:UIImage,logoImg:UIImage,logoSize:CGSize )-> UIImage {
         UIGraphicsBeginImageContext(srcImg.size);
         srcImg.draw(in: CGRect(x: 0, y: 0, width: srcImg.size.width, height: srcImg.size.height))
         let rect = CGRect(x: srcImg.size.width/2 - logoSize.width/2, y: srcImg.size.height/2-logoSize.height/2, width:logoSize.width, height: logoSize.height);
@@ -548,36 +463,30 @@ open class LBXScanWrapper: NSObject,AVCaptureMetadataOutputObjectsDelegate {
     }
     
     //图像缩放
-    static func resizeImage(image:UIImage,quality:CGInterpolationQuality,rate:CGFloat)->UIImage?
-    {
+    static func resizeImage(image:UIImage,quality:CGInterpolationQuality,rate:CGFloat)->UIImage? {
         var resized:UIImage?;
         let width    = image.size.width * rate;
-        let height   = image.size.height * rate;
-        
+        let height   = image.size.height * rate
         UIGraphicsBeginImageContext(CGSize(width: width, height: height));
         let context = UIGraphicsGetCurrentContext();
         context!.interpolationQuality = quality;
         image.draw(in: CGRect(x: 0, y: 0, width: width, height: height))
         
         resized = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-        
+        UIGraphicsEndImageContext()
         return resized;
     }
     
     
     //图像裁剪
-    static func imageByCroppingWithStyle(srcImg:UIImage,rect:CGRect)->UIImage?
-    {
+    static func imageByCroppingWithStyle(srcImg:UIImage,rect:CGRect)->UIImage? {
         let imageRef = srcImg.cgImage
         let imagePartRef = imageRef!.cropping(to: rect)
         let cropImage = UIImage(cgImage: imagePartRef!)
-        
         return cropImage
     }
     //图像旋转
-    static func imageRotation(image:UIImage,orientation:UIImage.Orientation)->UIImage
-    {
+    static func imageRotation(image:UIImage,orientation:UIImage.Orientation)->UIImage {
         var rotate:Double = 0.0;
         var rect:CGRect;
         var translateX:CGFloat = 0.0;

@@ -9,8 +9,7 @@
 import UIKit
 
 ///扫码区域动画效果
-public enum LBXScanViewAnimationStyle
-{
+public enum LBXScanViewAnimationStyle {
    case LineMove   //线条上下移动
    case NetGrid//网格
    case LineStill//线条停止在扫码区域中央
@@ -18,22 +17,18 @@ public enum LBXScanViewAnimationStyle
 }
 
 ///扫码区域4个角位置类型
-public enum LBXScanViewPhotoframeAngleStyle
-{
+public enum LBXScanViewPhotoframeAngleStyle {
     case Inner//内嵌，一般不显示矩形框情况下
     case Outer//外嵌,包围在矩形框的4个角
     case On   //在矩形框的4个角上，覆盖
 }
 
 
-public struct LBXScanViewStyle
-{
+public struct LBXScanViewStyle {
     
     // MARK: - -中心位置矩形框
-    
- /// 是否需要绘制扫码矩形框，默认YES
+    /// 是否需要绘制扫码矩形框，默认YES
     public var isNeedShowRetangle:Bool = true
-    
     /**
     *  默认扫码区域为正方形，如果扫码区域不是正方形，设置宽高比
     */
@@ -74,13 +69,10 @@ public struct LBXScanViewStyle
     public var photoframeLineW:CGFloat = 6
     
     //MARK: ----动画效果
-    
     /**
     @brief  扫码动画效果:线条或网格
     */
     public var anmiationStyle = LBXScanViewAnimationStyle.LineMove
-    
-    
     /**
     *  动画效果的图像，如线条或网格的图像
     */
